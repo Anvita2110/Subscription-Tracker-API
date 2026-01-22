@@ -1,0 +1,24 @@
+{
+  "name": "subscription-tracker",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bunx tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "bun dist/server.js"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.10",
+    "tsx": "^4.21.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  }
+}
