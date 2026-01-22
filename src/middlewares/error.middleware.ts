@@ -5,7 +5,6 @@ type ErrorWithStatus = Error & { statusCode?: number };
 
 const errorMiddleware: ErrorRequestHandler = (err, _req, res, next) => {
   try {
-
     const error: ErrorWithStatus =
       err instanceof Error ? (err as ErrorWithStatus) : (new Error(String(err)) as ErrorWithStatus);
 

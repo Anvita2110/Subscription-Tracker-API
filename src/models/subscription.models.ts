@@ -1,6 +1,5 @@
 import mongoose, { type HydratedDocument, type Model, type Schema, type Types } from "mongoose";
 
-
 export interface ISubscription {
   name: string;
   price: number;
@@ -106,7 +105,6 @@ const subscriptionSchema = new mongoose.Schema<ISubscription>(
   { timestamps: true },
 );
 
-
 subscriptionSchema.pre("save", async function (this: SubscriptionDocument) {
   const doc = this as SubscriptionDocument;
 
@@ -125,7 +123,6 @@ subscriptionSchema.pre("save", async function (this: SubscriptionDocument) {
   if (doc.renewalDate && doc.renewalDate < new Date()) {
     doc.status = "expired";
   }
-
 });
 
 const Subscription: Model<ISubscription> =

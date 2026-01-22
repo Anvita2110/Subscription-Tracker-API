@@ -74,7 +74,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
 
     const { email, password } = req.body as { email: string; password: string };
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
 
     if (!user) {
       const error: ErrorWithStatus = new Error("User not found");
