@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import type { Request, Response, NextFunction } from "express";
 import { config } from "dotenv";
+import type { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 config();
 

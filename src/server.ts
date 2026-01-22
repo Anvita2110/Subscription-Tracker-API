@@ -1,11 +1,11 @@
-import express, { urlencoded } from "express";
-import { config } from "dotenv";
-import authRouter from "./routes/auth.routes";
-import userRouter from "./routes/user.routes";
-import subscriptionRouter from "./routes/subscription.routes";
-import connectDatabase from "./database/mongodb";
 import cookieParser from "cookie-parser";
+import { config } from "dotenv";
+import express, { urlencoded } from "express";
+import connectDatabase from "./database/mongodb";
 import errorMiddleware from "./middlewares/error.middleware";
+import authRouter from "./routes/auth.routes";
+import subscriptionRouter from "./routes/subscription.routes";
+import userRouter from "./routes/user.routes";
 
 config();
 
