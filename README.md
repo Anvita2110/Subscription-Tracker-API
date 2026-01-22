@@ -36,7 +36,32 @@ bun install
 
 ```env
 PORT=8080
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/subscription_tracker
 ```
+
+## Docker Development
+
+For development with PostgreSQL database:
+
+1. Start the PostgreSQL container:
+
+```bash
+docker-compose up -d
+```
+
+2. Stop the database when done:
+
+```bash
+docker-compose down
+```
+
+The database will be available at `localhost:5432` with:
+
+- **Database**: `subscription_tracker`
+- **Username**: `postgres`
+- **Password**: `postgres`
+
+Database data persists in a Docker volume named `postgres_data`.
 
 ## Development
 
@@ -79,6 +104,7 @@ subscription-tracker/
 ├── package.json           # Dependencies and scripts
 ├── tsconfig.json          # TypeScript configuration
 ├── biome.json             # Code quality configuration
+├── docker-compose.yml     # Docker Compose configuration
 ├── .env                   # Environment variables
 └── README.md              # This file
 ```
