@@ -1,44 +1,64 @@
 import type { ErrorRequestHandler } from "express";
 import mongoose from "mongoose";
+import { HttpError } from "../httpError";
 
-type ErrorWithStatus = Error & { statusCode?: number };
-
-const errorMiddleware: ErrorRequestHandler = (err, _req, res, next) => {
-  try {
-    const error: ErrorWithStatus =
-      err instanceof Error ? (err as ErrorWithStatus) : (new Error(String(err)) as ErrorWithStatus);
-
-    if (!error.statusCode) error.statusCode = 500;
-
-    console.error(err);
-
-    if (err instanceof mongoose.Error.CastError || (err as any)?.name === "CastError") {
-      const e = new Error("Resource not found") as ErrorWithStatus;
-      e.statusCode = 404;
-      return res.status(e.statusCode).json({ success: false, error: e.message });
-    }
-
-    if (typeof (err as any)?.code === "number" && (err as any).code === 11000) {
-      const e = new Error("Duplicate field value entered") as ErrorWithStatus;
-      e.statusCode = 400;
-      return res.status(e.statusCode).json({ success: false, error: e.message });
-    }
-
-    if (err instanceof mongoose.Error.ValidationError || (err as any)?.name === "ValidationError") {
-      const validationErr = err as mongoose.Error.ValidationError;
-      const messages = Object.values(validationErr.errors).map((val) => val.message);
-
-      const e = new Error(messages.join(", ")) as ErrorWithStatus;
-      e.statusCode = 400;
-      return res.status(e.statusCode).json({ success: false, error: e.message });
-    }
-
-    return res
-      .status(error.statusCode)
-      .json({ success: false, error: error.message || "Server Error" });
-  } catch (caught) {
-    next(caught);
-  }
+type MongoServerError = {
+  name: "MongoServerError";
+  code?: number;
+  message: string;
+  keyValue?: Record<string, unknown>;
 };
 
-export default errorMiddleware;
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isMongoServerError(err: unknown): err is MongoServerError {
+  if (!isObject(err)) return false;
+  return err.name === "MongoServerError" && typeof err.message === "string";
+}
+
+export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+  console.error(err);
+
+  if (err instanceof HttpError) {
+    return res.status(err.statusCode).json({
+      success: false,
+      error: err.message,
+    });
+  }
+
+  if (err instanceof mongoose.Error.CastError) {
+    return res.status(404).json({
+      success: false,
+      error: "Resource not found",
+    });
+  }
+
+  if (err instanceof mongoose.Error.ValidationError) {
+    const messages = Object.values(err.errors).map((e) => e.message);
+    return res.status(400).json({
+      success: false,
+      error: messages.join(", "),
+    });
+  }
+
+  if (isMongoServerError(err) && err.code === 11000) {
+    return res.status(400).json({
+      success: false,
+      error: "Duplicate field value entered",
+    });
+  }
+
+  if (err instanceof Error) {
+    return res.status(500).json({
+      success: false,
+      error: err.message || "Server Error",
+    });
+  }
+
+  return res.status(500).json({
+    success: false,
+    error: "Unknown error",
+  });
+};

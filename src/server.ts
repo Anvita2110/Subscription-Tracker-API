@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import express, { urlencoded } from "express";
 import connectDatabase from "./database/mongodb";
 import arcjetMiddleware from "./middlewares/arcjet.middleware";
-import errorMiddleware from "./middlewares/error.middleware";
+import { errorHandler } from "./middlewares/error.middleware";
 import authRouter from "./routes/auth.routes";
 import subscriptionRouter from "./routes/subscription.routes";
 import userRouter from "./routes/user.routes";
@@ -19,7 +19,6 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
-app.use(errorMiddleware);
 
 app.get("/", (_req, res) => {
   res.send("Hello World!");
@@ -29,3 +28,5 @@ app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   await connectDatabase();
 });
+
+app.use(errorHandler);
