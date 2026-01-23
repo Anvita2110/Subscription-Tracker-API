@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bunx tsx watch src/server.ts",
+    "dev": "bun --watch src/server.ts",
     "build": "tsc",
     "start": "bun dist/server.js",
     "lint": "bunx biome lint src",
@@ -24,6 +24,8 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@arcjet/bun": "^1.0.0",
+    "@arcjet/inspect": "^1.0.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",

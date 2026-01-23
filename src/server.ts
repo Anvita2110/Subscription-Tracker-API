@@ -2,6 +2,7 @@ import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 import express, { urlencoded } from "express";
 import connectDatabase from "./database/mongodb";
+import arcjetMiddleware from "./middlewares/arcjet.middleware";
 import errorMiddleware from "./middlewares/error.middleware";
 import authRouter from "./routes/auth.routes";
 import subscriptionRouter from "./routes/subscription.routes";
@@ -11,7 +12,7 @@ config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-
+app.use(arcjetMiddleware);
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -20,7 +21,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
 app.use(errorMiddleware);
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.send("Hello World!");
 });
 

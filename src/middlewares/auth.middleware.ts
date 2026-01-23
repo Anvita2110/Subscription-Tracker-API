@@ -13,6 +13,8 @@ const authorize = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization;
 
+    console.log(req);
+
     if (!authHeader?.startsWith("Bearer ")) {
       return res.status(401).json({ message: "Unauthorized" });
     }
